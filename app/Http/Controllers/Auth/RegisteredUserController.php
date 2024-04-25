@@ -30,22 +30,38 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // Validasi input
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
+
+        // Buat pengguna baru dengan peran tertentu
+        $role = 'user'; // Default role
+
+        if ($request->email === 'admin@example.com') {
+            $role = 'admin'; // Menetapkan peran admin berdasarkan logika
+        }
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $role, // Menyimpan peran dalam database
         ]);
 
+        // Emit event setelah pendaftaran berhasil
         event(new Registered($user));
 
+        // Login otomatis setelah registrasi
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        // Redirect berdasarkan peran
+        if ($user->role === 'admin') {
+            return redirect('/dashboard'); // Admin diarahkan ke dashboard
+        }
+
+        return redirect('/'); // Pengguna biasa diarahkan ke beranda
     }
 }
