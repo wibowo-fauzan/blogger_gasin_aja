@@ -1021,6 +1021,27 @@
 </head>
 
 <body>
+    @if(!empty($articles))
+            <div class="row">
+                @foreach($articles as $article)
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            @if(isset($article['urlToImage']))
+                                <img src="{{ $article['urlToImage'] }}" class="card-img-top" alt="Article Image">
+                            @endif
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $article['title'] }}</h5>
+                                <p class="card-text">{{ $article['description'] }}</p>
+                                <a href="{{ $article['url'] }}" class="btn btn-primary" target="_blank">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <p>No articles found.</p>
+        @endif
+
     <div class="container-fluid d-none d-lg-block">
         <div class="row align-items-center bg-dark px-lg-5">
             <div class="col-lg-9">

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeNewsController;
 use App\Http\Controllers\UserHomeScreenController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -18,7 +19,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/', [UserHomeScreenController::class, 'index'])->name('indexhome');
+Route::get('/', [HomeNewsController::class, 'index'])->name('indexhome');
 
 // Grup rute untuk admin
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -27,7 +28,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 // Grup rute untuk pengguna yang telah login
 Route::middleware(['auth', 'role:user'])->group(function () {
-    Route::get('/user-dashboard', [UserHomeScreenController::class, 'index'])->name('user.dashboard');
+    Route::get('/user-dashboard', [HomeNewsController::class, 'index'])->name('user.dashboard');
 });
 
 // Rute untuk profile, membutuhkan otentikasi
